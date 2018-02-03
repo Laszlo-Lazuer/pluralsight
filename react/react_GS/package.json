@@ -4,7 +4,7 @@
   "description": "React.js Getting Started pluralsight course",
   "main": "index.js",
   "scripts": {
-    "it": "webpack-dev-server --hot",
+    "react": "webpack-dev-server --hot",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "laszlo",
