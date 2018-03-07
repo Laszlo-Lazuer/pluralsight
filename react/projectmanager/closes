@@ -1,0 +1,139 @@
+// Testing inputs
+var input = [2,'{}[]()','{[}]'];
+var input2 = [3,'{[()]}','{[(])}','{{[[(())]]}}'];
+var input3 = [6,'}][}}(}][))]','[](){()}','()','({}([][]))[]()','{)[](}]}]}))}(())(','([[)]'];
+
+/*******************************************
+** braces(values)                          *
+** @param values array                     *
+** @return array - returns an array with a *
+** YES or NO binary reply, if braces close *
+*******************************************/
+function braces(values) {
+  let array = [];
+
+  for (let x = 1;x<=values[0];x++) { //Loop through individual elements in values array
+    let bracesString = values[x];
+    let checkObj = {};
+    let checkArr = bracesString.split(''); //create an array of characters from the string
+    const TRUE = 'YES';
+    const FALSE = 'NO';
+      let openingBracesArr = ['{', '[', '('];
+  let closingBracesArr = ['}', ']', ')'];
+
+    checkArr.forEach(value => {
+      (checkObj[value]>=1) ? ++checkObj[value] : checkObj[value] = 1; //Count the frequency of each brace
+    });
+
+    if (checkObj['('] !== checkObj[')']) { //Test against frequencies to see if there is an odd number of opening/closing braces.
+      array.push(FALSE);
+      continue;
+    }  else  if (checkObj['['] !== checkObj[']']) {
+      console.log(FALSE);
+      array.push(FALSE);
+      continue;
+    }  else  if (checkObj['{'] !== checkObj['}']) {
+      array.push(FALSE);
+      continue;
+    }
+    array.push(validateBraces(bracesString, openingBracesArr, closingBracesArr, TRUE, FALSE)); //If number of opening/closing braces is even test for correct match
+  }
+
+  values = []; //Clear the values array
+  array.forEach(value => {
+    values.push(value); //Assign the values from the array (array) to the return values
+  });
+  array = null;
+  return values;
+}
+
+/*******************************************
+** validateBraces(bracesString)            *
+** @param bracesString string              *
+** this function will perform closing test *
+*******************************************/
+function validateBraces(bracesString, openingBracesArr, closingBracesArr, TRUE, FALSE) {
+  let buffer = [];
+  // let openingBracesArr = ['{', '[', '('];
+  // let closingBracesArr = ['}', ']', ')'];
+
+  for (let i = 0; i < bracesString.length; i ++) {
+    let brace = bracesString[i];
+    if (openingBracesArr.includes(brace)) {
+      buffer.push(brace);
+    } else if (closingBracesArr.includes(brace)) {
+      if (closingBracesArr[openingBracesArr.indexOf(buffer.pop())] !== brace) {
+        return FALSE;
+      }
+    }
+  }
+  return TRUE;
+};
+
+console.log(braces(input));
+console.log(braces(input2));
+console.log(braces(input3));
+
+
+
+document.write('Input: ' + input + ' Expected: YES, NO output: ' + braces(input));
+document.write('<br><br>Input: ' + input2 + ' Expected: YES, NO, YES output: ' + braces(input2));
+document.write('<br><br>Input: ' + input3 + ' Expected: NO, YES, YES, YES, NO, NO output: ' + braces(input3));
+
+
+//Throwing in a Frequency Sort since I studied so much for it
+
+var freqInput = 'hello';
+var freqInput2 = [2,3,4,5,3,4,5,4];
+
+/******************************************
+** freqSort(arr)                          *
+** @param arr array/string                *
+** @return array - returns an array with  *
+** elements sorted by most frequent       *
+*******************************************/
+function freqSort(arr) {
+  //Step 0 - Base case test
+  if (typeof arr === 'string') {
+    var stringCheck = 1;
+    arr = arr.split('');
+  }
+  //Step 1 - Sort arr
+  var swap = null;
+  var obj = {};
+  var array = [];
+  for (let x=0;x<arr.length;x++) {
+    for (let y=0;y<arr.length;y++) {
+      if (arr[x] < arr[y]) {
+        swap = arr[x];
+        arr[x] = arr[y];
+        arr[y] = swap;
+      }
+    }
+  }
+
+  //Step 2 - Create a 2-D array with frequencies
+  arr.forEach(value => {
+    (obj[value]>=1) ? ++obj[value]:obj[value] = 1;
+  });
+
+  Object.keys(obj).forEach( value => {
+    array.push((stringCheck) ? [value, obj[value]]:[parseInt(value), obj[value]]);
+  });
+  //Step 3 - Sort 2-D array by frequency
+  array.sort((a,b) => {
+    return b[1] - a[1];
+  })
+  //Step 4 - Return a 1-D array sorted by frequency (Descending for this demo)
+  arr = [];
+  array.forEach(value => {
+    for (let i=0;i<value[1];i++) {
+      arr.push(value[0]);
+    }
+  });
+  return arr;
+}
+
+document.write('<br><h2>Frequency Sort Results</h2>');
+document.write('Input: ' + freqInput + ' Output: ' + freqSort(freqInput));
+document.write('<br><br>Input: ' + freqInput2 + ' Output: ' + freqSort(freqInput2));
